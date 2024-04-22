@@ -40,12 +40,59 @@ operación solicitada
 """
 
 
-def new_controller():
+def new_controller(size):
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control = controller.new_controller(size)
+    
+    return control
+    
+
+def choose_size():
+
+    print("Escoja el tamanio de los datos")
+    print("1. small")
+    print("2. medium")
+    print("3. large")
+    print("4. 10 porciento")
+    print("5. 20 porciento")
+    print("6. 30 porciento")
+    print("7. 40 porciento")
+    print("8. 50 porciento")
+    print("9. 60 porciento")
+    print("10. 70 porciento")
+    print("11. 80 porciento")
+    print("12. 90 porciento")
+    
+    value = int(input("Ingrese el valor: "))
+    
+    if value == 1:
+        return "small-"
+    elif value == 2:
+        return "medium-"
+    elif value == 3:
+        return "large-"
+    elif value == 4:
+        return "10-por-"
+    elif value == 5:
+        return "20-por-"
+    elif value == 6:
+        return "30-por-"
+    elif value == 7:
+        return "40-por-"
+    elif value == 8:
+        return "50-por-"
+    elif value == 9:
+        return "60-por-"
+    elif value == 10:
+        return "70-por-"
+    elif value == 11:
+        return "80-por-"
+    elif value == 12:
+        return "90-por-"
+    else:
+        return "large-"
 
 
 def print_menu():
@@ -62,12 +109,13 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control):
+def load_data(control, size):
     """
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    pass
+    
+    return controller.load_data(control, size)
 
 
 def print_data(control, id):
@@ -77,12 +125,23 @@ def print_data(control, id):
     #TODO: Realizar la función para imprimir un elemento
     pass
 
-def print_req_1(control):
+def print_req_1(control, date_min, date_max):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    pass
+    
+    answer = controller.req_1(control, date_min, date_max)
+    
+    if answer is not None:
+        size, table = answer
+        print("============= Requerimiento 1 =============")
+        print("Ofertas laborales publicadas entre las fechas " + date_min + " y " + date_max)
+        print(f"La cantidad de ofertas es {size}")
+        print(table)
+    else:
+        print("No funciono")
+        
 
 
 def print_req_2(control):
@@ -142,7 +201,6 @@ def print_req_8(control):
 
 
 # Se crea el controlador asociado a la vista
-control = new_controller()
 
 # main del reto
 if __name__ == "__main__":
@@ -156,9 +214,19 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
+            size = choose_size()
+            control = new_controller(size)
+            control = load_data(control, size)
+            print("Información cargada correctamente\n")
+            
         elif int(inputs) == 2:
-            print_req_1(control)
+            print("---------- Requerimiento 1 ----------\n")
+            print("Conocer las ofertas laborales publicadas durante un intervalo de fechas especifico\n")
+            
+            date_min = input("Ingrese la fecha mínima (YYYY-MM-DD): ")
+            date_max = input("Ingrese la fecha máxima (YYYY-MM-DD): ")
+            
+            print_req_1(control, date_min, date_max)
 
         elif int(inputs) == 3:
             print_req_2(control)

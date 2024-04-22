@@ -24,6 +24,7 @@ import config as cf
 import model
 import time
 import csv
+from datetime import datetime
 import tracemalloc
 
 """
@@ -31,24 +32,53 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 
-def new_controller():
+def new_controller(size):
     """
     Crea una instancia del modelo
     """
     #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    
+    control = model.new_catalog(size)
+    
+    return control
+    
+    
 
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_data(control, size):
     """
     Carga los datos del reto
     """
     # TODO: Realizar la carga de datos
-    pass
+    
+    load_jobs(control, size)
+    load_skills(control, size)
+    
+    return control
 
-
+def load_jobs(control, size):
+    """
+    Carga los datos de los trabajos
+    """
+    
+    jobs_file = cf.data_dir + size +"jobs.csv" # Selecciona el archivo con el porcentaje de datos a cargar S
+    
+    input_file = csv.DictReader(open(jobs_file, encoding='utf-8'),delimiter=";") # Obejto Iterador que permite leer el archivo
+    
+    for job in input_file:
+        # 2022-04-14T17:24:00.000Z
+        job['published_at'] = datetime.strptime(job['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        model.add_data(control, job)
+        
+def load_skills(control, size):
+    
+    skills_file = cf.data_dir + size +"skills.csv" # Selecciona el archivo con el porcentaje de datos a cargar 
+    input_file = csv.DictReader(open(skills_file, encoding='utf-8'),delimiter=";") # Obejto Iterador que permite leer el archivo
+    
+    for skill in input_file:
+        model.add_skill(control, skill)
 # Funciones de ordenamiento
 
 def sort(control):
@@ -69,12 +99,13 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control, date_min, date_max):
     """
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    pass
+    
+    return model.req_1(control, date_min, date_max)
 
 
 def req_2(control):
