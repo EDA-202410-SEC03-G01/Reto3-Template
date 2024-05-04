@@ -20,6 +20,8 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+import numpy as np
+import matplotlib.pyplot as plt
 import config as cf
 import sys
 import controller
@@ -118,12 +120,19 @@ def load_data(control, size):
     return controller.load_data(control, size)
 
 
-def print_data(control, id):
+def print_data(catalog):
     """
         Función que imprime un dato dado su ID
     """
     #TODO: Realizar la función para imprimir un elemento
-    pass
+    answer = controller.data(catalog)
+    if answer is not None:
+        size, table = answer
+        print("============= Carga de Datos =============")
+        print(f"La cantidad de ofertas es {size}")
+        print(table)
+    else:
+        print("No funciono")
 
 def print_req_1(control, date_min, date_max):
     """
@@ -144,12 +153,23 @@ def print_req_1(control, date_min, date_max):
         
 
 
-def print_req_2(control):
+def print_req_2(control, salario_min, salario_max):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    
+    answer = controller.req_2(control, salario_min, salario_max)
+    
+    if answer is not None:
+        size, table = answer
+        print("============= Requerimiento-2  =============")
+        print("Ofertas laborales publicadas entre los salarios " + salario_min + " y " + salario_max)
+        print(f"La cantidad de ofertas es {size}")
+        print(table)
+    else:
+        print("No funciono")
+  
 
 
 def print_req_3(control):
@@ -160,13 +180,22 @@ def print_req_3(control):
     pass
 
 
-def print_req_4(control):
+def print_req_4(control, tipo_trabajo, pais, numero_ofertas):
     """
-        Función que imprime la solución del Requerimiento 4 en consola
+        Función que imprime la solución del Requerimiento 4en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 4
-    pass
-
+    # TODO: Imprimir el resultado del requerimiento 2
+    
+    answer = controller.req_4(control, tipo_trabajo, ciudad, numero_ofertas)
+    
+    if answer is not None:
+        size, table = answer
+        print("============= Requerimiento-4  =============")
+        print("Ofertas laborales publicadas ciudad y tipo de trabajo " + tipo_trabajo + " y " + ciudad)
+        print(f"La cantidad de ofertas es {size}")
+        print(table)
+    else:
+        print("No funciono")
 
 def print_req_5(control):
     """
@@ -184,12 +213,25 @@ def print_req_6(control):
     pass
 
 
-def print_req_7(control):
+def print_req_7(control, tipo_propiedad, pais, ano):
     """
         Función que imprime la solución del Requerimiento 7 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 7
-    pass
+    answer = controller.req_7(control, tipo_propiedad, pais, ano)
+    
+    if answer is not None:
+        size, table, size1, valor_minimo, valor_maximo = answer
+        
+        print("============= Requerimiento-7 =============")
+        print("Ofertas laborales publicadas para el pais, ano y propiedad " + tipo_propiedad + pais + " y " + str(ano))
+        print(f"La cantidad de ofertas en el ano son {size1}")
+        print(f"La cantidad de ofertas utilizadas en el grafico son {size}")
+        print(f"El valor minimo utilizado en el grafico es {valor_minimo}")
+        print(f"El valor maximo utilizado en el grafico es {valor_maximo}")
+        print(table)
+        plt.show()
+    else:
+        print("No funciono")
 
 
 def print_req_8(control):
@@ -217,35 +259,61 @@ if __name__ == "__main__":
             size = choose_size()
             control = new_controller(size)
             control = load_data(control, size)
+            print_data(control)
             print("Información cargada correctamente\n")
             
         elif int(inputs) == 2:
             print("---------- Requerimiento 1 ----------\n")
             print("Conocer las ofertas laborales publicadas durante un intervalo de fechas especifico\n")
             
-            date_min = input("Ingrese la fecha mínima (YYYY-MM-DD): ")
-            date_max = input("Ingrese la fecha máxima (YYYY-MM-DD): ")
+            date_min = input("Ingrese fecha limite inferior: ")
+            date_max = input("Ingrese fecha limite superior: ")
             
             print_req_1(control, date_min, date_max)
 
         elif int(inputs) == 3:
-            print_req_2(control)
+            print("---------- Requerimiento 2 ----------\n")
+            print("Conocer las ofertas laborales publicadas durante un intervalo de salarios especifico\n")
+            
+            salario_min = input("Ingrese el limite inferior del salario: ")
+            salario_max = input("Ingrese el limite superior del salario: ")
+            
+            print_req_2(control, salario_min, salario_max)
+
 
         elif int(inputs) == 4:
             print_req_3(control)
 
         elif int(inputs) == 5:
-            print_req_4(control)
+            print("---------- Requerimiento 4 ----------\n")
+            print("Conocer las ofertas laborales publicadas dado el pais y tipo de trabajo")
+            
+            tipo_trabajo = input("Ingrese el tipo de trabajo: ")
+            ciudad = input("Ingrese la ciudad: ")
+            numero_ofertas = int(input("Ingrese el numero de ofertas: "))
+            print_req_4(control, tipo_trabajo, ciudad, numero_ofertas)
 
         elif int(inputs) == 6:
             print_req_5(control)
 
         elif int(inputs) == 7:
+            
             print_req_6(control)
 
         elif int(inputs) == 8:
-            print_req_7(control)
-
+            print("---------- Requerimiento 7 ----------\n")
+            print("Conocer las ofertas laborales publicadas dado un ano, pais y propiedad de conteo")
+            
+            tipo_trabajo = str(input("Ingrese el tipo de propiedad (experticia, ubicacion o habilidad): "))
+            if tipo_trabajo == "experticia":
+                tipo_trabajo = "experience_level"
+            if tipo_trabajo == "habilidad":
+                tipo_trabajo = "skills"
+            if tipo_trabajo == "ubicacion":
+                tipo_trabajo = "workplace_type"
+            pais = str(input("Ingrese el pais: "))
+            ano = str(input("Ingrese el ano: "))
+            print_req_7(control, tipo_trabajo, pais, ano)
         elif int(inputs) == 9:
             print_req_8(control)
 

@@ -55,7 +55,10 @@ def load_data(control, size):
     
     load_jobs(control, size)
     load_skills(control, size)
+    load_salary(control, size)
+    load_jobs_id(control, size)
     
+
     return control
 
 def load_jobs(control, size):
@@ -71,6 +74,25 @@ def load_jobs(control, size):
         # 2022-04-14T17:24:00.000Z
         job['published_at'] = datetime.strptime(job['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
         model.add_data(control, job)
+        model.add_year(control, job)
+        model.add_list(control, job)
+    
+def load_jobs_id(control, size):
+    """
+    Carga los datos de los trabajos
+    """
+    
+    jobs_file = cf.data_dir + size +"jobs.csv" # Selecciona el archivo con el porcentaje de datos a cargar S
+    
+    input_file = csv.DictReader(open(jobs_file, encoding='utf-8'),delimiter=";") # Obejto Iterador que permite leer el archivo
+    
+    for job in input_file:
+        job['published_at'] = datetime.strptime(job['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        model.add_id(control, job)
+        model.add_req7_experticia(control, job)
+        model.add_req7_habilidad(control, job)
+        model.add_req7_ubicacion(control, job)
+        model.add_city_workplace(control, job)
         
 def load_skills(control, size):
     
@@ -79,7 +101,25 @@ def load_skills(control, size):
     
     for skill in input_file:
         model.add_skill(control, skill)
+        
+def load_salary(control, size):
+    
+    salary_file = cf.data_dir + size +"employments_types.csv" # Selecciona el archivo con el porcentaje de datos a cargar 
+    input_file = csv.DictReader(open(salary_file, encoding='utf-8'),delimiter=";") # Obejto Iterador que permite leer el archivo
+    for salary in input_file:
+        model.add_salary(control, salary)
+        model.add_id_salary(control, salary)
+
+        
+
 # Funciones de ordenamiento
+
+def data(catalog):
+    """
+    Ordena los datos del modelo
+    """
+    #TODO: Llamar la función del modelo para ordenar los datos
+    return model.data(catalog)
 
 def sort(control):
     """
@@ -108,12 +148,12 @@ def req_1(control, date_min, date_max):
     return model.req_1(control, date_min, date_max)
 
 
-def req_2(control):
+def req_2(control, salary_min, salary_max):
     """
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
-    pass
+    return model.req_2(control, salary_min, salary_max)
 
 
 def req_3(control):
@@ -124,12 +164,12 @@ def req_3(control):
     pass
 
 
-def req_4(control):
+def req_4(control, tipo_trabajo, ciudad, numero_ofertas):
     """
     Retorna el resultado del requerimiento 4
     """
     # TODO: Modificar el requerimiento 4
-    pass
+    return model.req_4(control, tipo_trabajo, ciudad, numero_ofertas)
 
 
 def req_5(control):
@@ -147,12 +187,12 @@ def req_6(control):
     pass
 
 
-def req_7(control):
+def req_7(control, tipo_propiedad, pais, ano):
     """
     Retorna el resultado del requerimiento 7
     """
     # TODO: Modificar el requerimiento 7
-    pass
+    return model.req_7(control, tipo_propiedad, pais, ano)
 
 
 def req_8(control):
